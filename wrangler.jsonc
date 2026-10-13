@@ -1,18 +1,75 @@
 {
-  "$schema":"node_modules/wrangler/config-schema.json",
-  "name":"dracoria-legacy","main":"worker/index.mjs","compatibility_date":"2026-10-12",
-  "compatibility_flags":["nodejs_compat"],"workers_dev":true,"preview_urls":false,
-  "vars":{"READ_ONLY":"true","STAGING":"false"},
-  "containers":[{"class_name":"LegacyDracoria","image":"./Dockerfile","instance_type":"basic","max_instances":1}],
-  "durable_objects":{"bindings":[{"name":"APP","class_name":"LegacyDracoria"}]},
-  "exports":{"LegacyDracoria":{"type":"durable-object","storage":"sqlite"}},
-  "triggers":{"crons":["0 * * * *"]},
-  "observability":{"enabled":true},
-  "env":{"staging":{
-    "name":"dracoria-legacy-staging","routes":[],"preview_urls":false,
-    "vars":{"READ_ONLY":"false","STAGING":"true"},
-    "containers":[{"class_name":"LegacyDracoria","image":"./Dockerfile.staging","instance_type":"basic","max_instances":1}],
-    "durable_objects":{"bindings":[{"name":"APP","class_name":"LegacyDracoria"}]},
-    "triggers":{"crons":[]}
-  }}
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dracoria-legacy",
+  "main": "worker/index.mjs",
+  "compatibility_date": "2026-10-12",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    "READ_ONLY": "false",
+    "STAGING": "false"
+  },
+  "containers": [
+    {
+      "class_name": "LegacyDracoria",
+      "image": "./Dockerfile",
+      "instance_type": "basic",
+      "max_instances": 1
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "APP",
+        "class_name": "LegacyDracoria"
+      }
+    ]
+  },
+  "exports": {
+    "LegacyDracoria": {
+      "type": "durable-object",
+      "storage": "sqlite"
+    }
+  },
+  "triggers": {
+    "crons": [
+      "0 * * * *"
+    ]
+  },
+  "observability": {
+    "enabled": true
+  },
+  "env": {
+    "staging": {
+      "name": "dracoria-legacy-staging",
+      "routes": [],
+      "preview_urls": false,
+      "vars": {
+        "READ_ONLY": "false",
+        "STAGING": "true"
+      },
+      "containers": [
+        {
+          "class_name": "LegacyDracoria",
+          "image": "./Dockerfile.staging",
+          "instance_type": "basic",
+          "max_instances": 1
+        }
+      ],
+      "durable_objects": {
+        "bindings": [
+          {
+            "name": "APP",
+            "class_name": "LegacyDracoria"
+          }
+        ]
+      },
+      "triggers": {
+        "crons": []
+      }
+    }
+  }
 }
