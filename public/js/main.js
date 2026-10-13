@@ -21,9 +21,10 @@ async function connectWallet() {
 }
 
 
-const socket = io();
+const socket = window.dracoriaAuthenticated ? io() : null;
 
 document.addEventListener('DOMContentLoaded', function () {
+  if(!window.dracoriaAuthenticated)return;
   const updateStatus = async () => {
     try {
 
@@ -44,7 +45,6 @@ function updateUser() {
   fetch('/api/user/status')
     .then(response => response.json())
     .then(data => {
-      console.log('User data:', data);
       document.getElementById('lavaJuiceCount').textContent = `Lava Juice: ${data.lavaJuice}`;
     })
     .catch((error) => {
@@ -53,20 +53,20 @@ function updateUser() {
     });
 }
 
-socket.on('dragonUpdate', (data) => {
+socket?.on('dragonUpdate', (data) => {
   console.log('Dragon update received', data);
   // Update dragon state on the web page
   document.getElementById('dragonHunger').textContent = `Hunger: ${data.hunger}`;
   document.getElementById('dragonHappiness').textContent = `Happiness: ${data.happiness}`;
 });
 
-socket.on('gardenUpdate', (data) => {
+socket?.on('gardenUpdate', (data) => {
   console.log('Garden update received', data);
   // Update garden state on the web page
   document.getElementById('fruitCount').textContent = `Fruit Count: ${data.fruitCount}`;
 });
 
-socket.on('connect_error', (err) => {
+socket?.on('connect_error', (err) => {
   // Handle connection error
   console.error('WebSocket connection error. Try refreshing the page.', err);
   //alert('WebSocket connection error. Try refreshing the page.');

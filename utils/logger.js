@@ -1,46 +1,13 @@
-const fs = require('fs');
-const path = require('path');
-
-// Define log file path
-const logFilePath = path.join(__dirname, '../logs/app.log');
-
-// Ensure logs directory exists
-const logsDir = path.dirname(logFilePath);
-if (!fs.existsSync(logsDir)) {
-  fs.mkdirSync(logsDir, { recursive: true });
+// Preserve fixed operational events without logging credentials, user rows or chat.
+function emit(level,event,fields={}) {
+  const output=JSON.stringify({time:new Date().toISOString(),level,event,...fields})+'\n';
+  (level==='error'?process.stderr:process.stdout).write(output);
 }
-
-// Function to append log messages to the log file
-function appendLog(message, level = 'INFO') {
-  const timestamp = new Date().toISOString();
-  const logMessage = `${timestamp} [${level}] ${message}\n`;
-
-  // Append log message to the log file
-  fs.appendFile(logFilePath, logMessage, (err) => {
-    if (err) {
-      console.error(`Failed to write to log file: ${err.message}`, err);
-    }
-  });
-}
-
-// Exported logging functions
-module.exports = {
-  info: (message) => {
-    console.log(message);
-    appendLog(message, 'INFO');
+module.exports={
+  info:()=>emit('info','application_event'),error:()=>emit('error','application_error'),debug:()=>{},
+  event:(event,fields)=>emit('info',event,fields),
+  installConsoleGate(){
+    for(const method of ['log','info','warn','debug'])console[method]=()=>emit('info','application_event');
+    console.error=()=>emit('error','application_error');
   },
-  error: (message, error) => {
-    console.error(message);
-    if (error) {
-      const errorMessage = error.message ? error.message : 'Error object is undefined';
-      const errorStack = error.stack ? `\nStack: ${error.stack}` : '';
-      appendLog(`${message} - ${errorMessage}${errorStack}`, 'ERROR');
-    } else {
-      appendLog(`${message} - Error object is undefined`, 'ERROR');
-    }
-  },
-  debug: (message) => {
-    console.debug(message);
-    appendLog(message, 'DEBUG');
-  }
 };

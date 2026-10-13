@@ -1,6 +1,4 @@
 const express = require('express');
-const Web3 = require('web3');
-const WalletConnectProvider = require("@walletconnect/web3-provider");
 const router = express.Router();
 
 // Middleware to check if user is already logged in

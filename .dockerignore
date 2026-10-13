@@ -1,0 +1,12 @@
+.git
+.github
+.env*
+.dev.vars*
+node_modules
+logs
+.wrangler
+work
+backups
+*.archive*
+*.sqlite*
+*.dump

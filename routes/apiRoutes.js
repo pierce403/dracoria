@@ -9,10 +9,11 @@ const gardenService = require('../services/gardenService');
 const dragonService = require('../services/dragonService');
 const userService = require('../services/userService'); // Import userBalanceService
 const logger = require('../utils/logger'); // Import logger utility
+const {readOnly}=require('../utils/migration');
 
 router.get('/user/status', isAuthenticated, async (req, res) => {
   try {
-    const user = await User.findOne({ _id: req.session.userId });
+    const user = await User.findOne({ _id: req.session.userId }).select('-password -openAIKey');
     if (!user) {
       logger.info('No user found for the session.');
       return res.status(404).send('User not found');
@@ -42,6 +43,7 @@ router.get('/garden/status', isAuthenticated, async (req, res) => {
   try {
     let garden = await Garden.findOne({ userId: req.session.userId });
     if (!garden) {
+      if(readOnly())return res.status(404).send('Garden not found during maintenance.');
       logger.info('No garden found for the user, creating a default garden.');
       garden = await Garden.create({
         userId: req.session.userId,

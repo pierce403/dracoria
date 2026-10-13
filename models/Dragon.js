@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { getIo } = require('../server'); // Adjusted to use getIo function for socket.io instance
 
 const dragonSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

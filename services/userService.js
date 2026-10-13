@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const Dragon = require('../models/Dragon'); // Importing the Dragon model
 const logger = require('../utils/logger');
-const { getIo } = require('../server'); // Adjusted import to use a getter function for io
 
 async function increaseLavaJuice(userId, amount) {
   try {

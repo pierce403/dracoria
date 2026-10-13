@@ -24,7 +24,7 @@ router.post('/auth/register', async (req, res) => {
     res.redirect('/auth/login');
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).send(error.message);
+    res.status(500).send('Unable to register this account.');
   }
 });
 
@@ -41,6 +41,7 @@ router.post('/auth/login', async (req, res) => {
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
+      await new Promise((resolve,reject)=>req.session.regenerate(error=>error?reject(error):resolve()));
       req.session.userId = user._id;
       // Check if the user has a dragon, if not, create a default one
       const dragonExists = await Dragon.findOne({ userId: user._id });
@@ -61,7 +62,7 @@ router.post('/auth/login', async (req, res) => {
     }
   } catch (error) {
     console.error('Login error:', error);
-    return res.status(500).send(error.message);
+    return res.status(500).send('Unable to sign in.');
   }
 });
 

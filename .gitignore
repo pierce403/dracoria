@@ -1,3 +1,9 @@
 node_modules
 logs
 .env
+.env*
+.dev.vars*
+.wrangler/
+build/
+public/deployment.json
+worker/version.mjs
